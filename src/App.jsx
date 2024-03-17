@@ -5,11 +5,18 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
 import back from './assets/back.png'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import AuthScreen from './screens/AuthScreen';
 import { auth } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import useStore from './store';
 import AppLoader from './components/layouts/AppLoader';
+
+//Screens
+import BoardsScreen from './screens/BoardsScreen';
+import AuthScreen from './screens/AuthScreen';
+
+//Utils
+import PublicOnlyRoute from './components/utils/PublicOnlyRoute';
+import PrivateRoute from './components/utils/PrivateRoute';
 
 const App = () => {
   const { loader, setLoginStatus } = useStore();
@@ -35,7 +42,8 @@ const App = () => {
         <CssBaseline />
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AuthScreen />} />
+          <Route path="/" element={<PublicOnlyRoute Component={AuthScreen} />} />
+          <Route path="/boards" element={<PrivateRoute Component={BoardsScreen} />} />
         </Routes>
         </BrowserRouter>
       </div>

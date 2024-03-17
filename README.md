@@ -1,4 +1,4 @@
-# React + Vite
+# Daily Biz To Do App
 
 The name of the web app is Daily Biz!
 
