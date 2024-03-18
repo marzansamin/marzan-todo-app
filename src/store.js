@@ -4,6 +4,11 @@ import { devtools } from 'zustand/middleware'
 const store = set => ({
   loader: true, // which we will show during the time of checking the auth status
   isLoggedIn: false, // from there we will decide on which UI the user should be on, this is false because we'll assume at first that the user is unauthenticated
+  boards: [],
+  areBoardsFetched: false,
+
+  setBoards: boards => set({boards, areBoardsFetched: true}, false, "setBoards"),
+
   setLoginStatus: status => 
     set({
       isLoggedIn: status,

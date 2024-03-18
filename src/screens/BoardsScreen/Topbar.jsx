@@ -5,6 +5,7 @@ import logo from '../../assets/list.svg'
 import LogOutIcon from '@mui/icons-material/ExitToApp'
 
 const Topbar = ({openModal}) => {
+
   return (
     <AppBar sx={{
       backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', position:'static'}}>
