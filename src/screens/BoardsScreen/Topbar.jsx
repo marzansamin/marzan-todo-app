@@ -3,6 +3,8 @@ import { AppBar, Toolbar, Button, Stack, Typography } from '@mui/material'
 import ImageEl from '../../components/utils/imageEl'
 import logo from '../../assets/list.svg'
 import LogOutIcon from '@mui/icons-material/ExitToApp'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../firebase'
 
 const Topbar = ({openModal}) => {
 
@@ -16,7 +18,7 @@ const Topbar = ({openModal}) => {
         </Stack>
         <Stack direction="row" spacing={2}>
           <Button onClick={openModal} variant='contained'>Create Plan</Button>
-          <Button startIcon={<LogOutIcon />} color='inherit'>Logout</Button>
+          <Button onClick={() => signOut(auth)} startIcon={<LogOutIcon />} color='inherit'>Logout</Button>
         </Stack>
       </Toolbar>
     </AppBar>
