@@ -17,6 +17,7 @@ import AuthScreen from './screens/AuthScreen';
 //Utils
 import PublicOnlyRoute from './components/utils/PublicOnlyRoute';
 import PrivateRoute from './components/utils/PrivateRoute';
+import SnacbarManager from './components/layouts/SnacbarManager';
 
 const App = () => {
   const { loader, setLoginStatus } = useStore();
@@ -40,6 +41,7 @@ const App = () => {
       height: '100vh',
       }}>
         <CssBaseline />
+        <SnacbarManager />
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<PublicOnlyRoute Component={AuthScreen} />} />

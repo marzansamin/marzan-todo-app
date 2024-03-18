@@ -5,6 +5,7 @@ import logo from '/src/assets/list.svg'
 import ImageEl from '../../components/utils/imageEl';
 import { auth } from '../../firebase'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import useStore from '../../store';
 
 const initForm = {
   email: "",
@@ -15,6 +16,7 @@ const AuthScreen = () => {
   const [loading, setloading] = useState(false); //used to stop the unauthorized user
   const [isLogin, setisLogin] = useState(true); //used to toggle between the login and signup page
   const [form, setform] = useState(initForm) 
+  const {setToaster} = useStore();
 
   const authText = isLogin ? "Don't Have An Account?" : "Already Have An Account?"
 
@@ -32,7 +34,7 @@ const AuthScreen = () => {
       }
     }catch(err){
       const msg= err.code.split('auth/')[1].split('-').join(' ')
-      console.log(msg);
+      setToaster(msg);
       setloading(false);
     }
   };
