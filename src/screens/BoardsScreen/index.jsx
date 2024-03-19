@@ -31,7 +31,9 @@ const BoardsScreen = () => {
 
     <Stack mt={5} px={3}>
       <Grid container spacing={4}>
-        {boards.map(board => <BoardCard key={board.id} {...board} />)}
+      {boards.map((board, index) => (
+            <BoardCard key={`${board.id}_${index}`} {...board} />
+          ))}
       </Grid>
     </Stack>
   </>

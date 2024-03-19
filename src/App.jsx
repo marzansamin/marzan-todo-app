@@ -13,6 +13,7 @@ import AppLoader from './components/layouts/AppLoader';
 //Screens
 import BoardsScreen from './screens/BoardsScreen';
 import AuthScreen from './screens/AuthScreen';
+import BoardScreen from './screens/BoardScreen';
 
 //Utils
 import PublicOnlyRoute from './components/utils/PublicOnlyRoute';
@@ -46,6 +47,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<PublicOnlyRoute Component={AuthScreen} />} />
           <Route path="/boards" element={<PrivateRoute Component={BoardsScreen} />} />
+          <Route path="/boards/:boardId" element={<PrivateRoute Component={BoardScreen} />} />
         </Routes>
         </BrowserRouter>
       </div>

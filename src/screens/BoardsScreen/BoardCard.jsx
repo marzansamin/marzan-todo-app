@@ -8,6 +8,7 @@ import { colors } from '../../theme'
 import CreateBoardModal from './CreateBoardModal'
 import { useState } from'react'
 import useApp from '../../hooks/useApp'
+import { useNavigate } from 'react-router-dom'
 
 const BoardCard = ({id, name, color, createdAt}) => {
   const [showModal, setshowModal] = useState(false);
@@ -31,7 +32,9 @@ const BoardCard = ({id, name, color, createdAt}) => {
 
   const handleDeleteBoard = async () => {
     deleteBoard(id);
-  }
+  };
+
+  const navigate = useNavigate();
 
   return (
     <Grid item xs={3}>
@@ -43,7 +46,7 @@ const BoardCard = ({id, name, color, createdAt}) => {
                     {name}
                   </Typography>
                 </Box>
-                <IconButton size='small'><OpenIcon /></IconButton>
+                <IconButton onClick={() => navigate(`/boards/${id}`)} size='small'><OpenIcon /></IconButton>
               </Stack>
               <Stack direction='row' alignItems='center' justifyContent='space-between'>
                 <Typography variant='caption'>Created At: {createdAt}</Typography>

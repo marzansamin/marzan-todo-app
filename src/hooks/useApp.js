@@ -1,19 +1,41 @@
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc } from 'firebase/firestore'
+/* eslint-disable no-unused-vars */
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase' //Firestore instance
-import { updateDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth'
 import useStore from '../store';
 
 const useApp = () => {
   const {currentUser : {uid}} = getAuth();
   const boardsColRef = collection(db, `users/${uid}/boards`); 
-  const {setBoards, addBoard} = useStore()
+  const {setBoards, addBoard} = useStore();
+
+  const updateBoardData = async(boardId, tabs) => {
+    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`)
+    try{
+      await updateDoc(docRef, {tabs})
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  //Function to fetch the selected board
+  const fetchBoard = async(boardId) => {
+    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`)
+    try{
+      const doc = await getDoc(docRef);
+      if(doc.exists){
+        return doc.data();
+      }else return null;
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   //Function to create a new plan
   const createBoard = async ({name, color}) => {
     try{
-      await addDoc(boardsColRef, {name, color, createdAt: serverTimestamp(),});
-      addBoard({name, color, createdAt: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`})
+      const doc = await addDoc(boardsColRef, {name, color, createdAt: serverTimestamp(),});
+      addBoard({name, color, createdAt: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`})
     } catch(err){
       //Show the error message in toaster
       console.log(err);
@@ -29,7 +51,7 @@ const useApp = () => {
       const boards = querySnapshot.docs.map(doc => ({
         ...doc.data(), 
         id:doc.id, 
-        createdAt: `${doc.data().createdAt.toDate().toLocaleDateString()} ${doc.data().createdAt.toDate().toLocaleTimeString()}`,
+        createdAt: `${doc.data().createdAt.toDate().toLocaleDateString()}, ${doc.data().createdAt.toDate().toLocaleTimeString()}`,
       }));
       setBoards(boards);
     } catch(err){
@@ -62,7 +84,7 @@ const useApp = () => {
     }
   };
 
-  return { createBoard, fetchBoards, updateBoard, deleteBoard };
+  return { createBoard, fetchBoards, updateBoard, deleteBoard, fetchBoard, updateBoardData };
 };
 
 export default useApp

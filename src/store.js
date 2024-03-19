@@ -10,7 +10,7 @@ const store = set => ({
 
   setToaster: (toasterMsg) => set({toasterMsg}, false, "setToaster"),
   setBoards: (boards) => set({boards, areBoardsFetched: true}, false, "setBoards"),
-  addBoard: (board) => set((old) => ({boards : [board, ...old.boards] })),
+  addBoard: (board) => set((old) => ({boards : [board, ...old.boards] }), false, "addBoard"),
 
   setLoginStatus: status => 
     set({
