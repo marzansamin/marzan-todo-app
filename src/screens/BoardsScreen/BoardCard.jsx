@@ -38,7 +38,7 @@ const BoardCard = ({id, name, color, createdAt}) => {
 
   return (
     <Grid item xs={3}>
-          <Paper sx={{backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)'}}>
+          <Paper sx={{backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', boxShadow: '2', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
             <Stack p={2} borderLeft='5px solid' borderColor={colors[color]}>
               <Stack direction='row' justifyContent='space-between' alignItems="center">
                 <Box width='50%'>
@@ -65,7 +65,7 @@ const BoardCard = ({id, name, color, createdAt}) => {
               isUpdate
             />
           )}
-        </Grid>
+    </Grid>
     )
 }
 

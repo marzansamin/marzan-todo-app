@@ -47,10 +47,10 @@ const AuthScreen = () => {
         {/* 1st element */}
         <div style={{display:'flex', justifyContent:'center', alignContent:'center'}}>
           <ImageEl sx={{height:100, mt:3}} src={logo} alt="Daily Biz!" />
-          <Typography sx={{fontSize:30, mt:6}}>Daily Biz!</Typography>
+          <Typography sx={{fontSize:30, mt:6,}}>Daily Biz!</Typography>
         </div>
         {/* 2nd element */}
-        <Typography color="rgba(255, 255, 255, 0.6)" sx={{fontSize:15}}>
+        <Typography fontWeight={800} color="#826F66" sx={{fontSize:15}}>
         Visualize Your Workflow to Boost Productivity. 
         <br/>Look Up Your Tasks Anytime, Anywhere.
         </Typography>

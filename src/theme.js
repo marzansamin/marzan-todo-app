@@ -13,18 +13,21 @@ export const colors = [
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    // mode: 'dark',
     background: {
-      // default: '#1D1F26'
+      default: '#FAF1E4'
     },
     primary: {
-      main: '#BEA4FF'
+      main: '#9EB384'
     },
   },
   components: {
     MuiIconButton: {
       defaultProps: {
         size: 'small',
+        style: {
+          color: '#9EB384' 
+        }
       },
     },
     MuiSnackbar: {
@@ -55,6 +58,9 @@ const theme = createTheme({
     },
     h6: {
       fontWeight: 700,
+    },
+    allVariants: {
+      color: "#435334"
     },
   },
   shape: {

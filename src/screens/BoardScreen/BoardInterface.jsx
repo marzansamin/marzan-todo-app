@@ -13,8 +13,11 @@ const BoardInterface = ({boardData, boardId}) => {
   const [tabs, settabs] = useState(structuredClone(boardData));
   const {updateBoardData} = useApp()
 
-  const hadleAddTask = async(text, dueDate, priority) => {
+  const handleAddTask = async(text, dueDate, priority) => {
     const dClone = structuredClone(tabs)
+    if (!dClone[addTaskTo]) {
+      dClone[addTaskTo] = []; 
+    }
     dClone[addTaskTo].unshift({text, dueDate, priority, id: crypto.randomUUID()})
     try{
       await updateBoardData(boardId, dClone)
@@ -27,14 +30,15 @@ const BoardInterface = ({boardData, boardId}) => {
 
   return (
     <>
-    {!!addTaskTo && <AddTaskModal tabName={statusMap[addTaskTo]} onClose = {() => setaddTaskTo('')} addTask={hadleAddTask} />}
-      <Grid container px={4} mt={2} spacing={2}>
-        {Object.keys(statusMap).map(status => <BoardTab 
-          key={status} 
-          tasks={tabs[status]}
-          name={statusMap[status]} 
-          addTask={() => setaddTaskTo(status)} 
-        />)}
+    {!!addTaskTo && (<AddTaskModal tabName={statusMap[addTaskTo]} onClose = {() => setaddTaskTo('')} addTask={handleAddTask} />)}
+      <Grid container px={4} mt={2} spacing={2} >
+        {Object.keys(statusMap).map(status => (
+          <BoardTab
+            key={status} 
+            tasks={tabs[status]}
+            name={statusMap[status]} 
+            addTask={() => setaddTaskTo(status)} 
+        />))}
       </Grid>
     </>
   )

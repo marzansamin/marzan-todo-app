@@ -18,7 +18,7 @@ const Topbar = ({openModal}) => {
         </Stack>
         <Stack direction="row" spacing={2}>
           <Button onClick={openModal} variant='contained'>Create Plan</Button>
-          <Button onClick={() => signOut(auth)} startIcon={<LogOutIcon />} color='inherit'>Logout</Button>
+          <Button onClick={() => signOut(auth)} startIcon={<LogOutIcon />} style={{color:'#435334'}}>Logout</Button>
         </Stack>
       </Toolbar>
     </AppBar>

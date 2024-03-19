@@ -34,10 +34,8 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{backgroundImage: `url(${back})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      <div style={{
+      // backgroundColor: '#B6C4B6',
       width: '100vw',
       height: '100vh',
       }}>

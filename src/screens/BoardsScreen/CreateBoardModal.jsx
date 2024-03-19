@@ -34,7 +34,7 @@ const CreateBoardModal = ({closeModal, board, isUpdate}) => {
           <TextField value={name} onChange={(e) => setname(e.target.value)} label="Plan Name" />
           <Stack spacing={1.5} direction='row'>
             <Typography>Color: </Typography>
-            {colors.map((clr, idx) => <Box sx={{cursor: 'pointer', border: color === idx ? "3px solid #383838" : "none", outline:`2px solid ${clr}`}} onClick={() => setcolor(idx)} key={clr} height={25} width={25} backgroundColor={clr} borderRadius='50%' />)}
+            {colors.map((clr, idx) => <Box sx={{cursor: 'pointer', border: color === idx ? "3px solid #FAF1E4" : "none", outline:`2px solid ${clr}`}} onClick={() => setcolor(idx)} key={clr} height={25} width={25} backgroundColor={clr} borderRadius='50%' />)}
           </Stack>
         </Stack>
         <Button disabled={loading} onClick={handleAction} variant='contained' size='large'>{isUpdate? "Update" : "Create"}</Button>
