@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 
 const Task = ({id, text, dueDate, priority}) => {
   const [daysRemaining, setDaysRemaining] = useState(null);
+  //const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     if (dueDate) {
@@ -17,7 +18,7 @@ const Task = ({id, text, dueDate, priority}) => {
       const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
       setDaysRemaining(days);
     }
-  }, [dueDate]);
+  }, [dueDate,]);
 
   const getPriorityLabel = () => {
     let avatar, color;
@@ -38,13 +39,11 @@ const Task = ({id, text, dueDate, priority}) => {
   };
 
   return (
-    <Stack direction='row' justifyItems='space-between' spacing={2}>
-      <Stack p={1} border='3px solid' borderColor="#777980" bgcolor="transparent" width='100%'>
+    <Stack direction='row' justifyItems='space-between' spacing={2} sx={{boxShadow:'3', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
+      <Stack p={1} bgcolor="transparent" width='100%'>
         <Typography>{text}</Typography>
-        {/* <Typography>{dueDate}</Typography>
-        <Typography>{priority}</Typography> */}
         <Stack direction='row' spacing={3}>
-          <Chip size='small' label={daysRemaining !== null ? `${daysRemaining} Days Remaining` : 'Due Today'} sx={{backgroundColor: "#CBAACB"}} />
+          <Chip size='small' label={daysRemaining !== 0 ? `${daysRemaining} Days Remaining` : 'Due Today'} sx={{backgroundColor: "#CBAACB"}} />
           <Chip size='small' label={getPriorityLabel().label} sx={{backgroundColor: getPriorityLabel().color}} />
         </Stack>
       </Stack>

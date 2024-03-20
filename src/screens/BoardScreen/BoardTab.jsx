@@ -1,13 +1,13 @@
 // Todo, inprogress, completed, failed
 /* eslint-disable react/prop-types */
 import { Grid, Paper, Stack, Typography, IconButton} from '@mui/material'
-import AddIcon from '@mui/icons-material/AddCircleOutline'
+import AddIcon from '@mui/icons-material/AddCircleOutlineRounded'
 import Task from './Task'
 
 const BoardTab = ({name, addTask, tasks}) => {
   return (
     <Grid item xs={3}>
-      <Paper sx={{backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', boxShadow:'3', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
+      <Paper sx={{backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', boxShadow:'3',}}>
         <Stack p={2}>
           <Stack direction='row' alignItems='center' justifyContent='space-between'>
             <Typography fontWeight={400} variant='h6'>{name}</Typography>

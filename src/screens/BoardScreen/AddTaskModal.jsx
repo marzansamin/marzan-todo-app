@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
-
+import dayjs from 'dayjs';
 
 const AddTaskModal = ({tabName, onClose, addTask}) => {
   const [text, setText] = useState('');
@@ -32,6 +32,8 @@ const AddTaskModal = ({tabName, onClose, addTask}) => {
     setPriority('Low');
   };
 
+  const today = dayjs();
+
   return (
     <Dialog open onClose={onClose} fullWidth maxWidth='xs'>
       <Stack p={2}>
@@ -54,6 +56,7 @@ const AddTaskModal = ({tabName, onClose, addTask}) => {
                   onChange={handleDueDateChange}
                   label="Due Date"
                   fullWidth
+                  minDate={today}
                   textField={(props) => <TextField {...props} variant="outlined" />}
                 />
               </LocalizationProvider>
