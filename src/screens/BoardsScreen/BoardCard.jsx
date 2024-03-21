@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { Grid, Paper, Stack, Typography, IconButton, Box } from '@mui/material'
+import { Grid, Paper, Stack, Typography, IconButton, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material'
 import OpenIcon from '@mui/icons-material/Launch'
 import Update from '@mui/icons-material/Edit'
 import Delete from '@mui/icons-material/Delete'
@@ -9,10 +9,13 @@ import CreateBoardModal from './CreateBoardModal'
 import { useState } from'react'
 import useApp from '../../hooks/useApp'
 import { useNavigate } from 'react-router-dom'
+import setToaster from '../../store' 
+import useStore from '../../store'
 
 const BoardCard = ({id, name, color, createdAt}) => {
   const [showModal, setshowModal] = useState(false);
   const {updateBoard, deleteBoard} = useApp();
+  const {setToaster} = useStore();
 
   const handleOpenModal = () => {
     setshowModal(true);
@@ -32,6 +35,16 @@ const BoardCard = ({id, name, color, createdAt}) => {
 
   const handleDeleteBoard = async () => {
     deleteBoard(id);
+    return setToaster("The plan is deleted");
+  };
+
+  //For opening the modal when delete button is clicked
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const navigate = useNavigate();
@@ -52,7 +65,23 @@ const BoardCard = ({id, name, color, createdAt}) => {
                 <Typography variant='caption'>Created At: {createdAt}</Typography>
                 <Stack direction='row'>
                   <IconButton onClick={handleOpenModal}><Update /></IconButton>
-                  <IconButton color='error' onClick={handleDeleteBoard}><Delete /></IconButton>
+                  <IconButton onClick={handleClickOpen}><Delete /></IconButton>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Are you sure you want to delete the plan?"}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={handleDeleteBoard} autoFocus color='error'>
+                        Yes
+                      </Button>
+                      <Button onClick={handleClose}>No</Button>
+                    </DialogActions>
+                  </Dialog>
                 </Stack>
               </Stack>
             </Stack>

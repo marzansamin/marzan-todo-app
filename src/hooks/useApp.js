@@ -9,16 +9,17 @@ const useApp = () => {
   const boardsColRef = collection(db, `users/${uid}/boards`); 
   const {setBoards, addBoard} = useStore();
 
+  //Function to update the tasks--> adding tasks, drag and drop, edit, delete
   const updateBoardData = async(boardId, tabs) => {
     const docRef = doc(db, `users/${uid}/boardsData/${boardId}`)
     try{
-      await updateDoc(docRef, {tabs})
+      await updateDoc(docRef, {tabs, lastUpdated: serverTimestamp()})
     }catch(err){
       console.log(err);
     }
   }
 
-  //Function to fetch the selected board
+  //Function to fetch the selected plan
   const fetchBoard = async(boardId) => {
     const docRef = doc(db, `users/${uid}/boardsData/${boardId}`)
     try{
@@ -43,7 +44,7 @@ const useApp = () => {
     }
   };
 
-  //Function to fetch all the created boards
+  //Function to fetch all the created plans
   const fetchBoards = async (setloading) => {
     try{
       const q = query(boardsColRef, orderBy("createdAt", "desc"))
@@ -62,24 +63,24 @@ const useApp = () => {
     }
   };
 
-  // Function to update a board
+  // Function to edit a plan
   const updateBoard = async (boardId, newData) => {
-    try {
+    try{
       const boardRef = doc(db, `users/${uid}/boards/${boardId}`);
       await updateDoc(boardRef, newData);
       await fetchBoards();
-    } catch (err) {
+    }catch (err) {
       console.log(err);
     }
   };
 
-  // Function to delete a board
+  // Function to delete a plan
   const deleteBoard = async (boardId) => {
-    try {
+    try{
       const boardRef = doc(db, `users/${uid}/boards/${boardId}`);
       await deleteDoc(boardRef);
       fetchBoards();
-    } catch (err) {
+    }catch (err) {
       console.log(err);
     }
   };

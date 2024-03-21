@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */
 import { AppBar, Toolbar, Stack, Typography, IconButton } from '@mui/material'
 import BackIcon from '@mui/icons-material/ArrowBack'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { useNavigate } from 'react-router-dom'
 import { colors } from '../../theme'
 
@@ -19,7 +18,6 @@ const BoardTopBar = ({name, lastUpdated, color}) => {
         </Stack>
         <Stack spacing={2} direction='row' alignItems='center'>
           <Typography variant='body2'>Last Updated: {lastUpdated}</Typography>
-          <IconButton><DeleteIcon /></IconButton>
         </Stack>
       </Toolbar>
     </AppBar>

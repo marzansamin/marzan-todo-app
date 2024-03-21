@@ -1,14 +1,13 @@
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { Stack, Typography, IconButton, Chip, Avatar } from '@mui/material'
+import { Stack, Typography, IconButton, Chip, Dialog, DialogTitle, DialogActions, Button } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import UpdateIcon from '@mui/icons-material/Edit'
 import { useState, useEffect } from 'react'
+import { Draggable } from 'react-beautiful-dnd'
 
-const Task = ({id, text, dueDate, priority}) => {
+const Task = ({id, text, dueDate, priority, removeTask, index}) => {
   const [daysRemaining, setDaysRemaining] = useState(null);
-  //const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     if (dueDate) {
@@ -38,20 +37,46 @@ const Task = ({id, text, dueDate, priority}) => {
     }
   };
 
+  //For opening the modal when delete button is clicked
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Stack direction='row' justifyItems='space-between' spacing={2} sx={{boxShadow:'3', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
-      <Stack p={1} bgcolor="transparent" width='100%'>
-        <Typography>{text}</Typography>
-        <Stack direction='row' spacing={3}>
-          <Chip size='small' label={daysRemaining !== 0 ? `${daysRemaining} Days Remaining` : 'Due Today'} sx={{backgroundColor: "#CBAACB"}} />
-          <Chip size='small' label={getPriorityLabel().label} sx={{backgroundColor: getPriorityLabel().color}} />
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (<Stack {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} direction='row' justifyItems='space-between' spacing={2} sx={{boxShadow:'3', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
+        <Stack p={1} bgcolor="transparent" width='100%'>
+          <Typography mb={1}>{text}</Typography>
+          <Stack direction='row' spacing={3}>
+            <Chip size='small' label={daysRemaining !== 0 ? `${daysRemaining} Days Remaining` : 'Due Today'} sx={{backgroundColor: "#CBAACB"}} />
+            <Chip size='small' label={getPriorityLabel().label} sx={{backgroundColor: getPriorityLabel().color}} />
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack direction='row' spacing={1}>
-        <IconButton size='small' ><UpdateIcon /></IconButton>
-        <IconButton size='small' color='error'><DeleteIcon /></IconButton>
-      </Stack>
-    </Stack>
+        <Stack direction='row' spacing={1}>
+          <IconButton size='small' onClick={handleClickOpen}><DeleteIcon /></IconButton>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Are you sure you want to delete the plan?"}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={removeTask} autoFocus color='error'>
+                  Yes
+                </Button>
+                <Button onClick={handleClose}>No</Button>
+              </DialogActions>
+            </Dialog>
+        </Stack>
+      </Stack>)}
+    </Draggable>
   )
 }
 
