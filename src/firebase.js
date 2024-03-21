@@ -15,13 +15,20 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const fbFunctions = getFunctions(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const fbFunctions = getFunctions(app);
 
 if (process.env.NODE_ENV === "development") {
-  connectAuthEmulator(auth, "http://localhost:9099");
-  connectFirestoreEmulator(db, "localhost", 8080);
-  connectFunctionsEmulator(fbFunctions, "localhost", 5001);
+  try {
+    connectAuthEmulator(auth, "http://localhost:9099");
+    connectFirestoreEmulator(db, "localhost", 8080);
+    connectFunctionsEmulator(fbFunctions, "localhost", 5001);
+    console.log("Firebase emulators connected successfully.");
+  } catch (error) {
+    console.error("Error connecting Firebase emulators:", error);
+  }
 }
+
+export { app, db, auth, fbFunctions };
