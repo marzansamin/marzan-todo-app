@@ -9,17 +9,29 @@ import useApp from '../../hooks/useApp'
 import useStore from '../../store'
 import { DragDropContext } from 'react-beautiful-dnd'
 import Apploader from '../../components/layouts/AppLoader'
+import ShiftTaskModal from './ShiftTaskModal'
 
-const statusMap = {todos: "Todos", inProgress: "In Progress", completed: "Completed", failed: "Failed"}
+export const statusMap = {todos: "Todos", inProgress: "In Progress", completed: "Completed", failed: "Failed"}
 
 const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
   const [addTaskTo, setaddTaskTo] = useState("");
   const [tabs, settabs] = useState(structuredClone(boardData));
   const [loading, setloading] = useState(false);
+  const [shiftTask, setshiftTask] = useState(null);
   const {updateBoardData} = useApp();
   const {setToaster} = useStore();
  
   const handleOpenAddTaskmodal = useCallback((status) => setaddTaskTo(status), []);
+
+  const handleOpenShiftTaskModal = useCallback((status) => setshiftTask(status), []);
+
+  const handleUpdateBoardData = async (dClone) => {
+    setloading(true);
+      await updateBoardData(boardId, dClone);
+      settabs(dClone);
+      updateLastUpdated();
+      setToaster("Task updated")
+  }
 
   const handleAddTask = async(text, dueDate, priority) => {
     const dClone = structuredClone(tabs)
@@ -28,11 +40,8 @@ const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
     }
     dClone[addTaskTo].unshift({text, dueDate, priority, id: crypto.randomUUID()})
     try{
-      setloading(true);
-      await updateBoardData(boardId, dClone)
-      settabs(dClone)
-      setaddTaskTo('')
-      updateLastUpdated();
+      await handleUpdateBoardData(dClone);
+      setaddTaskTo('');
     }catch(err){
       console.log(err);
     }finally{
@@ -46,10 +55,7 @@ const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
     dClone[tab].splice(taskIdx, 1);
     setToaster("The task is deleted");
     try{
-      setloading(true);
-      await updateBoardData(boardId, dClone);
-      settabs(dClone);
-      updateLastUpdated();
+      await handleUpdateBoardData(dClone);
     }catch(err){
       console.log(err);
     }finally{
@@ -70,15 +76,12 @@ const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
     }
     //remove the task from source
     const [draggedTask] = dClone[source.droppableId].splice(source.index, 1);
-    //Ensure destination index is within bounds
+    //ensure destination index is within bounds
     const destinationIndex = destination.index >= 0 ? destination.index : 0;
     //add the task to the destination
     dClone[destination.droppableId].splice(destinationIndex, 0, draggedTask);
     try{
-      setloading(true);
-      await updateBoardData(boardId, dClone);
-      settabs(dClone);
-      updateLastUpdated();
+      await handleUpdateBoardData(dClone);
     }catch(err){
       console.log(err);
     }finally{
@@ -86,10 +89,28 @@ const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
     }
   };
 
+  const handleShiftTask = async newStatus => {
+    const oldStatus = shiftTask.status;
+    if(newStatus === oldStatus) return setshiftTask(null);
+    const dClone = structuredClone(tabs);
+    
+    const [task] = dClone[oldStatus].splice(shiftTask.index, 1);
+    dClone[newStatus].unshift(task);
+    try{
+      await handleUpdateBoardData(dClone);
+      setshiftTask(null);
+    }catch(err){
+      console.log(err);
+    }finally{
+      setloading(false);
+    }
+  }
+
   if(loading) return <Apploader />
 
   return (
     <>
+    {!!shiftTask && <ShiftTaskModal shiftTask={handleShiftTask} task={shiftTask} onClose={() => setshiftTask(null)}/>}
     {!!addTaskTo && (<AddTaskModal tabName={statusMap[addTaskTo]} onClose = {() => setaddTaskTo('')} addTask={handleAddTask} />)}
       <DragDropContext onDragEnd={handleDnd}>
         <Grid container px={4} mt={2} spacing={2} >
@@ -100,6 +121,7 @@ const BoardInterface = ({boardData, boardId, updateLastUpdated}) => {
               tasks={tabs[status]}
               name={statusMap[status]} 
               openAddTaskModal={handleOpenAddTaskmodal} 
+              openShiftTaskModal={handleOpenShiftTaskModal}
               removeTask={handleRemoveTask}
           />))}
         </Grid>

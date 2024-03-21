@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
@@ -6,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useState, useEffect } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 
-const Task = ({id, text, dueDate, priority, removeTask, index}) => {
+const Task = ({id, text, dueDate, priority, removeTask, index, onClick}) => {
   const [daysRemaining, setDaysRemaining] = useState(null);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const Task = ({id, text, dueDate, priority, removeTask, index}) => {
     <Draggable draggableId={id} index={index}>
       {(provided) => (<Stack {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} direction='row' justifyItems='space-between' spacing={2} sx={{boxShadow:'3', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
         <Stack p={1} bgcolor="transparent" width='100%'>
-          <Typography mb={1}>{text}</Typography>
+          <Typography {...(!!onClick ? { onClick: onClick } : {})} mb={1}>{text}</Typography>
           <Stack direction='row' spacing={3}>
             <Chip size='small' label={daysRemaining !== 0 ? `${daysRemaining} Days Remaining` : 'Due Today'} sx={{backgroundColor: "#CBAACB"}} />
             <Chip size='small' label={getPriorityLabel().label} sx={{backgroundColor: getPriorityLabel().color}} />

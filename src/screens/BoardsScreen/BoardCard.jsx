@@ -9,7 +9,6 @@ import CreateBoardModal from './CreateBoardModal'
 import { useState } from'react'
 import useApp from '../../hooks/useApp'
 import { useNavigate } from 'react-router-dom'
-import setToaster from '../../store' 
 import useStore from '../../store'
 
 const BoardCard = ({id, name, color, createdAt}) => {
@@ -27,15 +26,20 @@ const BoardCard = ({id, name, color, createdAt}) => {
 
   const handleUpdateBoard = async (updatedData) => {
     try {
-      await updateBoard(id, updatedData); 
+      await updateBoard(id, updatedData);
+      setToaster("Plan updated successfully.");
     } catch (err) {
       console.log(err);
     }
   };
 
   const handleDeleteBoard = async () => {
-    deleteBoard(id);
-    return setToaster("The plan is deleted");
+    try{
+      await deleteBoard(id);
+      setToaster("The plan is deleted");
+    }catch(err) {
+      console.log(err);
+    }
   };
 
   //For opening the modal when delete button is clicked
@@ -50,7 +54,7 @@ const BoardCard = ({id, name, color, createdAt}) => {
   const navigate = useNavigate();
 
   return (
-    <Grid item xs={3}>
+    <Grid item xs={12} sm={3}>
           <Paper sx={{backgroundColor: 'transparent', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', boxShadow: '2', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: '6px 10px 18px rgba(0, 0, 0, 0.1)' }}}>
             <Stack p={2} borderLeft='5px solid' borderColor={colors[color]}>
               <Stack direction='row' justifyContent='space-between' alignItems="center">
@@ -59,7 +63,7 @@ const BoardCard = ({id, name, color, createdAt}) => {
                     {name}
                   </Typography>
                 </Box>
-                <IconButton onClick={() => navigate(`/boards/${id}`)} size='small'><OpenIcon /></IconButton>
+                <IconButton size='small' onClick={() => navigate(`/boards/${id}`)}><OpenIcon /></IconButton>
               </Stack>
               <Stack direction='row' alignItems='center' justifyContent='space-between'>
                 <Typography variant='caption'>Created At: {createdAt}</Typography>

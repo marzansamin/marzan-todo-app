@@ -4,18 +4,29 @@ import { Dialog, Stack, TextField, Typography, Box, Button } from '@mui/material
 import ModalHeader from '../../components/layouts/ModalHeader'
 import { colors } from '../../theme'
 import useApp from '../../hooks/useApp'
+import useStore from '../../store'
 
 const CreateBoardModal = ({closeModal, board, isUpdate}) => {
   const {createBoard, updateBoard} = useApp();
   const [name, setname] = useState(board?.name || '');
   const [color, setcolor] = useState(board?.color || 0);
   const [loading, setloading] = useState(false);
+  const {setToaster} = useStore();
 
   const handleAction = async () => {
+    const tName = name.trim()
+    if(!tName){
+      setToaster("Enter a plan name");
+      return;
+    }
+    if (!/^[a-zA-Z0-9\s]{1,20}$/.test(tName))
+      return setToaster(
+        "Plan name cannot contain special characters and should not be more than 20 characters"
+      );
     try {
       setloading(true);
       if (isUpdate) {
-        await updateBoard(board.id, { name, color });
+        await updateBoard(board.id, { name: tName, color });
       } else {
         await createBoard({ name, color });
       }

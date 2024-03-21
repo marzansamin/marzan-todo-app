@@ -3,11 +3,13 @@ import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc
 import { db } from '../firebase' //Firestore instance
 import { getAuth } from 'firebase/auth'
 import useStore from '../store';
+import { useNavigate } from 'react-router-dom';
 
 const useApp = () => {
+  const navigate = useNavigate();
   const {currentUser : {uid}} = getAuth();
   const boardsColRef = collection(db, `users/${uid}/boards`); 
-  const {setBoards, addBoard} = useStore();
+  const {boards, setBoards, addBoard, setToaster } = useStore();
 
   //Function to update the tasks--> adding tasks, drag and drop, edit, delete
   const updateBoardData = async(boardId, tabs) => {
@@ -15,7 +17,8 @@ const useApp = () => {
     try{
       await updateDoc(docRef, {tabs, lastUpdated: serverTimestamp()})
     }catch(err){
-      console.log(err);
+      setToaster('Error updating the task');
+      throw err;
     }
   }
 
@@ -28,7 +31,8 @@ const useApp = () => {
         return doc.data();
       }else return null;
     }catch(err){
-      console.log(err);
+      setToaster('Error fetching the plan');
+      throw err;
     }
   }
 
@@ -38,8 +42,7 @@ const useApp = () => {
       const doc = await addDoc(boardsColRef, {name, color, createdAt: serverTimestamp(),});
       addBoard({name, color, createdAt: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`})
     } catch(err){
-      //Show the error message in toaster
-      console.log(err);
+      setToaster('Error creating the plan');
       throw err;
     }
   };
@@ -56,8 +59,7 @@ const useApp = () => {
       }));
       setBoards(boards);
     } catch(err){
-      //Show the error in the toaster
-      console.log(err);
+      setToaster('Error fetching the plans');
     } finally{
       if(setloading) setloading(false);
     }
@@ -70,7 +72,8 @@ const useApp = () => {
       await updateDoc(boardRef, newData);
       await fetchBoards();
     }catch (err) {
-      console.log(err);
+      setToaster('Error editing the plan');
+      throw err;
     }
   };
 
@@ -81,11 +84,26 @@ const useApp = () => {
       await deleteDoc(boardRef);
       fetchBoards();
     }catch (err) {
-      console.log(err);
+      setToaster('Error deleting the plan');
+      throw err;
     }
   };
 
-  return { createBoard, fetchBoards, updateBoard, deleteBoard, fetchBoard, updateBoardData };
+  // Function to delete a plan inner
+  const deleteBoardInner = async (boardId) => {
+    try{
+      const docRef = doc(db, `users/${uid}/boards/${boardId}`);
+      await deleteDoc(docRef);
+      const tBoards = boards.filter(board => board.id !== boardId);
+      setBoards(tBoards);
+      navigate('/boards');
+    }catch (err) {
+      setToaster('Error deleting the plan');
+      throw err;
+    }
+  };
+
+  return { createBoard, fetchBoards, updateBoard, deleteBoard, fetchBoard, updateBoardData, deleteBoardInner };
 };
 
 export default useApp
