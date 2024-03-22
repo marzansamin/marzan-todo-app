@@ -6,12 +6,12 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC5OEL8yE564PEXIH1m9dKe6wzsIMM2ILM",
-  authDomain: "daily-biz.firebaseapp.com",
-  projectId: "daily-biz",
-  storageBucket: "daily-biz.appspot.com",
-  messagingSenderId: "256687797093",
-  appId: "1:256687797093:web:e36a49fde2eed2e367e78c"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
@@ -21,10 +21,18 @@ const auth = getAuth(app);
 const fbFunctions = getFunctions(app);
 
 if (process.env.NODE_ENV === "development") {
+  // You can't use process.env in the client-side code
+  // Instead, use a hardcoded value or configure your development environment accordingly
+  const firebaseAuthEmulatorUrl = "http://localhost:9099";
+  const firestoreEmulatorHost = "localhost";
+  const firestoreEmulatorPort = 8080;
+  const functionsEmulatorHost = "localhost";
+  const functionsEmulatorPort = 5001;
+
   try {
-    connectAuthEmulator(auth, "http://localhost:9099");
-    connectFirestoreEmulator(db, "localhost", 8080);
-    connectFunctionsEmulator(fbFunctions, "localhost", 5001);
+    connectAuthEmulator(auth, firebaseAuthEmulatorUrl);
+    connectFirestoreEmulator(db, firestoreEmulatorHost, firestoreEmulatorPort);
+    connectFunctionsEmulator(fbFunctions, functionsEmulatorHost, functionsEmulatorPort);
     console.log("Firebase emulators connected successfully.");
   } catch (error) {
     console.error("Error connecting Firebase emulators:", error);
