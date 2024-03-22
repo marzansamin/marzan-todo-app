@@ -25,3 +25,4 @@ dist-ssr
 
 # Ignore .env.local file
 .env.local
+firebaseConfig.js
